@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from re import VERBOSE
 import scapy.all as scapy
 
 
@@ -10,7 +11,13 @@ def scan(ip):
     # broadcast.show()
     arp_request_broadcast = broadcast/arp_request
     # arp_request_broadcast.show()
-    (answered, unanswered) = scapy.srp(arp_request_broadcast, timeout=1)
-    print(answered.summary())
+    answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
+    
+    print('IP\t\t\tMAC Adress\n---------------------------------------------')
+    for answer in answered_list:
+        print(answer[1].psrc + "\t\t" + answer[1].hwsrc)
+        
 
+    print('---------------------------------------------')
+    
 scan("10.0.2.1/24")
